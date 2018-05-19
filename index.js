@@ -6,6 +6,8 @@ const path = require('path')
 const os = require('os')
 const fs = require('fs')
 const debug = require('debug')
+const Repo = require('ipfs-repo')
+const Keystore = require('orbit-db-keystore')
 
 const api = require('./api')
 const RecordLog = require('./log')
@@ -14,8 +16,10 @@ const recorddir = path.resolve(os.homedir(), './.record')
 if (!fs.existsSync(recorddir))
   fs.mkdirSync(recorddir)
 
+const keystorePath = path.resolve(recorddir, './keystore')
 
 const defaults = {
+  init: true,
   apiPort: 3000,
   orbitPath: path.resolve(recorddir, './orbitdb'),
   ipfsConfig: {
@@ -62,6 +66,7 @@ class RecordNode extends EventEmitter {
   constructor(options) {
     super()
 
+    this._started = false
     this._ipfs = null
     this._orbitdb = null
     this._options = extend(defaults, options || {})
@@ -73,16 +78,36 @@ class RecordNode extends EventEmitter {
     this._start()
   }
 
+  _keystoreExists() {
+    return fs.existsSync(keystorePath)
+    
+    // return new Promise(resolve => {
+    //   const repo = new Repo(this._options.ipfsConfig.repo)
+    //   repo.exists((err, bool) => {
+    // 	resolve(bool)
+    //   })
+    // })
+  }
 
-  _start() {
+
+  async _start() {
     this.logger('Starting RecordNode')
+
+    const keystoreExists = this._keystoreExists()
+    this.logger(`keystore exists: ${keystoreExists}`)
+    if (!this._options.init && !keystoreExists) {
+      this.logger('[notice] Create keystore before starting')
+      return
+    }
 
     const self = this
     this._ipfs = new IPFS(this._options.ipfsConfig)
     this._ipfs.on('error', (e) => this.emit('error', e))
     this._ipfs.on('ready', async () => {
 
-      self._orbitdb = new OrbitDB(self._ipfs, self._options.orbitPath)
+      self._orbitdb = new OrbitDB(self._ipfs, self._options.orbitPath, {
+	keystore: self._keystore
+      })
 
       const ipfsConfig = await self._ipfs.config.get()
       const ipfsInfo = await self._ipfs.id()
@@ -99,6 +124,7 @@ class RecordNode extends EventEmitter {
       const { apiPort } = self._options
       self._api.listen(apiPort, () => self.logger(`RecordNode API listening on port ${apiPort}`))
 
+      self._started = true
       self.logger('RecordNode Ready')
       self.emit('ready')
 
@@ -113,6 +139,16 @@ class RecordNode extends EventEmitter {
       self.logger(`All contacts loaded`)
 
     })
+  }
+
+  import(seed) {
+    if (!seed) {
+      //TODO: create new identity
+    }
+
+    //TODO: if seed - import identity from seed
+
+    //TODO: if privkey - import identity from privkey
   }
 
 }

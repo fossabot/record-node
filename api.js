@@ -20,6 +20,20 @@ module.exports = (self) => {
     next()
   })
 
+  app.get('/import', (req, res) => {
+    const { seed } = req.query
+    self.import(seed)
+
+    //TODO: app.locals need to be set
+  })
+
+  const nodeStarted = (req, res, next) => {
+    if (!self._started)
+      return res.send({ error: 'RecordNode not started' })
+
+    next()
+  }
+  app.use('*', nodeStarted)
   app.use('/ipfs', ipfsRouter)
   app.use('/logs', logsRouter)
   app.get('/', async (req, res) => {

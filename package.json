@@ -13,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "async": "^2.6.0",
+    "bitboot": "0.0.3",
     "debug": "^3.1.0",
     "deep-extend": "^0.5.1",
     "express": "^4.16.3",

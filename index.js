@@ -2,6 +2,7 @@ const IPFS = require('ipfs')
 const OrbitDB = require('orbit-db')
 const EventEmitter = require('events')
 const extend = require('deep-extend')
+const Bitboot = require('bitboot')
 const path = require('path')
 const os = require('os')
 const fs = require('fs')
@@ -51,6 +52,15 @@ class RecordNode extends EventEmitter {
     this.logger = debug('record:node')
     this.logger.log = console.log.bind(console) // log to stdout instead of stderr
     this.logger.err = debug('record:node:err')
+
+    this.bb = new Bitboot('record')
+    this.bb.on('error', this.logger.err)
+    this.bb.on('peer', (peers) => {
+      console.log(peers)
+    })
+    this.bb.on('rejoin', (nodeId) => {
+      console.log('I have a new node id:', nodeId.toString('hex'))
+    })
 
     this._log = null
     this._contacts = {}

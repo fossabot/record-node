@@ -1,7 +1,8 @@
 const async = require('async')
+const promisify = require('promisify-es6')
 
 module.exports = function info(self) {
-  return (callback) => {
+  return promisify((callback) => {
     async.parallel({
 
       orbitdb: (done) => {

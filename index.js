@@ -1,4 +1,3 @@
-const OrbitDB = require('orbit-db')
 const extend = require('deep-extend')
 const debug = require('debug')
 
@@ -15,7 +14,7 @@ const getDefaultConfig = () => {
 }
 
 class RecordNode {
-  constructor (ipfs, options = {}) {
+  constructor (ipfs, OrbitDB, options = {}) {
 
     this.logger = debug('record:node')
     this.logger.log = console.log.bind(console) // log to stdout instead of stderr

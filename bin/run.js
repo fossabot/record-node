@@ -5,6 +5,7 @@ const path = require('path')
 const debug = require('debug')
 const Logger = require('logplease')
 const IPFS = require('ipfs')
+const OrbitDB = require('orbit-db')
 
 const RecordNode = require('../index')
 
@@ -57,7 +58,7 @@ ipfs.on('ready', () => {
     orbitPath: path.resolve(recorddir, './orbitdb')
   }
 
-  const rn = new RecordNode(ipfs, opts)
+  const rn = new RecordNode(ipfs, OrbitDB, opts)
 
   rn.load()
 

@@ -61,5 +61,5 @@ module.exports = function info(self) {
         orbitdb
       })
     })
-  }
+  })
 }

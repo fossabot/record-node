@@ -1,19 +1,22 @@
 const RecordLog = require('../log')
+const promisify = require('promisify-es6')
 
 module.exports = function logs (self) {
-  return async (logAddress) => {
-
+  return promisify(async (logAddress, callback) => {
     let log = null
 
     if (!logAddress || logAddress === 'me') {
       log = self._log
     } else {
-      // TODO: replicate: false, localOnly
-      log = new RecordLog(self._orbitdb, logAddress)
+      // TODO: localOnly
+      const opts = {
+        replicate: false
+      }
+      log = new RecordLog(self._orbitdb, logAddress, opts)
       await log.load()
     }
 
-    return {
+    callback(null, {
       contacts: {
         add: async (address, alias) => {
           const data = await log.contacts.findOrCreate({ address, alias })
@@ -35,6 +38,6 @@ module.exports = function logs (self) {
           return log.tracks.all()
         }
       }
-    }
-  }
+    })
+  })
 }

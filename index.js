@@ -7,8 +7,8 @@ const RecordLog = require('./log')
 
 const getDefaultConfig = () => {
   const defaults = {
-    orbitPath: null,
-    orbitAddress: null
+    orbitPath: undefined,
+    orbitAddress: undefined
   }
 
   return defaults
@@ -27,7 +27,7 @@ class RecordNode {
 
     this._ipfs = ipfs
     this._orbitdb = new OrbitDB(this._ipfs, this._options.orbitPath)
-    this._log = new RecordLog(this._orbitdb, this._options.orbitAddress)
+    this._log = new RecordLog(this._orbitdb, this._options.orbitAddress, this._options.logConfig)
 
     this._contacts = {}
 

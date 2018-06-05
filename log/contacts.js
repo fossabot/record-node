@@ -29,6 +29,10 @@ module.exports = function (self) {
     add: async (data) => {
       const entry = new ContactEntry().create(data)
       const hash = await self._log.put(entry)
+
+      //TODO
+      //self.syncContacts()
+
       return hash
     },
 

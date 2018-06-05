@@ -31,8 +31,6 @@ class RecordNode {
 
     this._contacts = {}
 
-    //this.loadContacts()
-
     /* const ipfsConfig = await this._ipfs.config.get()
      * const ipfsInfo = await this._ipfs.id()
      * this.logger(`IPFS ID: ${ipfsInfo.id}`)
@@ -42,8 +40,6 @@ class RecordNode {
      */
 
     this.info = components.info(this)
-    this.logs = components.logs(this)
-
   }
 
   async load() {
@@ -51,19 +47,33 @@ class RecordNode {
     this.logger(`Log Address: ${this._log._log.address}`)
   }
 
-  loadContacts () {
-    this.logger('Loading Contacts')
+  syncContacts () {
+    this.logger('Loading contacts to sync')
 
     this._log.contacts.all().forEach(async (contact) => {
       const { address } = contact.content
       if (this._contacts[address]) { return }
 
       this.logger(`Loading contact: ${address}`)
-      const log = new RecordLog(this._orbitdb, address)
+      const opts = { replicate: true }
+      const log = new RecordLog(this._orbitdb, address, opts)
       await log.load()
       this._contacts[address] = log
     })
     this.logger(`All contacts loaded`)
+  }
+
+  async getLog(logId) {
+    if (!logId || logId === 'me') {
+      return this._log
+    }
+
+    // TODO: localOnly
+    const opts = { replicate: false }
+    const log = new RecordLog(this._orbitdb, logId, opts)
+    await log.load()
+
+    return log
   }
 }
 

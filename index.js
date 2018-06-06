@@ -2,6 +2,7 @@ const extend = require('deep-extend')
 const debug = require('debug')
 
 const components = require('./components')
+const api = require('./api')
 
 const RecordLog = require('./log')
 
@@ -40,6 +41,10 @@ class RecordNode {
      */
 
     this.info = components.info(this)
+
+    if (this._options.api) {
+      this._api = api(this)
+    }
   }
 
   async load() {
@@ -72,6 +77,8 @@ class RecordNode {
     const opts = { replicate: false }
     const log = new RecordLog(this._orbitdb, logId, opts)
     await log.load()
+
+    //TODO: cache?
 
     return log
   }

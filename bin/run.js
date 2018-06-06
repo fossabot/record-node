@@ -53,14 +53,16 @@ const ipfsConfig = {
 
 const ipfs = new IPFS(ipfsConfig)
 
-ipfs.on('ready', () => {
+ipfs.on('ready', async () => {
   const opts = {
-    orbitPath: path.resolve(recorddir, './orbitdb')
+    orbitPath: path.resolve(recorddir, './orbitdb'),
+    api: {
+      port: 8080
+    }
   }
 
   const rn = new RecordNode(ipfs, OrbitDB, opts)
 
-  rn.load()
-
+  await rn.load()
   // ready
 })

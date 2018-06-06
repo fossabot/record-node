@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 
-const RecordLog = require('../log')
-
 const loadLog = async (req, res, next) => {
   const logAddress = `/${req.params.logAddress}`
 
@@ -50,7 +48,6 @@ router.post('/contacts/:logAddress(*)', loadLog, (req, res, next) => {
   res.status(422).send({
     error: errors.join(', ')
   })
-
 }, async (req, res) => {
   const { address, alias } = res.locals.data
   const data = await res.locals.log.contacts.findOrCreate({ address, alias })

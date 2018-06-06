@@ -1,7 +1,7 @@
 const async = require('async')
 const promisify = require('promisify-es6')
 
-module.exports = function info(self) {
+module.exports = function info (self) {
   return promisify((callback) => {
     async.parallel({
 

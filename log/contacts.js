@@ -30,8 +30,8 @@ module.exports = function (self) {
       const entry = await new ContactEntry().create(data)
       const hash = await self._log.put(entry)
 
-      //TODO
-      //self.syncContacts()
+      // TODO:
+      // self.syncContacts()
 
       return hash
     },

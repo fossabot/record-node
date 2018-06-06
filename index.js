@@ -17,7 +17,6 @@ const getDefaultConfig = () => {
 
 class RecordNode {
   constructor (ipfs, OrbitDB, options = {}) {
-
     this.logger = debug('record:node')
     this.logger.log = console.log.bind(console) // log to stdout instead of stderr
     this.logger.err = debug('record:node:err')
@@ -47,7 +46,7 @@ class RecordNode {
     }
   }
 
-  async load() {
+  async load () {
     await this._log.load()
     this.logger(`Log Address: ${this._log._log.address}`)
   }
@@ -68,7 +67,7 @@ class RecordNode {
     this.logger(`All contacts loaded`)
   }
 
-  async getLog(logId) {
+  async getLog (logId) {
     if (!logId || logId === '/me') {
       return this._log
     }
@@ -78,7 +77,7 @@ class RecordNode {
     const log = new RecordLog(this._orbitdb, logId, opts)
     await log.load()
 
-    //TODO: cache?
+    // TODO: cache?
 
     return log
   }

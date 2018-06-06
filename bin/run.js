@@ -9,16 +9,13 @@ const OrbitDB = require('orbit-db')
 
 const RecordNode = require('../index')
 
-
 debug.enable('record:*,jsipfs')
-
 Logger.setLogLevel(Logger.LogLevels.DEBUG)
 
 const recorddir = path.resolve(os.homedir(), './.record')
-
 if (!fs.existsSync(recorddir)) { fs.mkdirSync(recorddir) }
 
-const connManagerConfig =  {
+const connManagerConfig = {
   maxPeers: 10,
   pollInterval: 30000
 }
@@ -45,7 +42,7 @@ const ipfsConfig = {
         // '/ip4/0.0.0.0/tcp/4003/ws',
         // '/dns4/star-signal.cloud.ipfs.team/wss/p2p-webrtc-star',
         '/ip4/159.203.117.254/tcp/9090/ws/p2p-websocket-star'
-        //'/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
+        // '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
       ]
     }
   }

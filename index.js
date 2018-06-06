@@ -64,7 +64,7 @@ class RecordNode {
   }
 
   async getLog(logId) {
-    if (!logId || logId === 'me') {
+    if (!logId || logId === '/me') {
       return this._log
     }
 
